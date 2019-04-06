@@ -29,27 +29,30 @@ public class AuthServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        clearMapBySessionId(request.getRequestedSessionId());
         String username = request.getParameter("username"); // параметр из POST-запроса
         String password = request.getParameter("password");
 
         PreparedStatement statement;
         ResultSet resultSet;
         try {
-            statement = connection.prepareStatement("select password from users where login = ?");
+            statement = connection.prepareStatement("select * from users where login = ? AND password = ?");
             statement.setString(1, username);
+            statement.setString(2, password);
             resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                String dbPassword = resultSet.getString(1);
-                if (dbPassword.equals(password)) {
-                    request.getSession(true); // возвращает JSESSION_ID
-                    System.out.println("AuthServlet: SessionId " + request.getRequestedSessionId());
-                    usersMap.put(request.getRequestedSessionId(), new User(username, password));
-                }
+            if (resultSet.next()) { //check password
+                request.getSession(true); // возвращает JSESSION_ID
+                System.out.println("AuthServlet: SessionId " + request.getRequestedSessionId());
+                usersMap.put(request.getRequestedSessionId(), new User(username, password));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("/ans");
         dispatcher.forward(request, response);
+    }
+
+    private void clearMapBySessionId(String requestedSessionId) {
+        usersMap.remove(requestedSessionId);
     }
 }
