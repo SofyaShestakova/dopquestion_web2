@@ -1,3 +1,5 @@
+import org.postgresql.core.SqlCommand;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -29,7 +31,7 @@ public class AuthServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        clearMapBySessionId(request.getRequestedSessionId());
+        removeOldData(request.getRequestedSessionId(), request);
         String username = request.getParameter("username"); // параметр из POST-запроса
         String password = request.getParameter("password");
 
@@ -40,19 +42,34 @@ public class AuthServlet extends HttpServlet {
             statement.setString(1, username);
             statement.setString(2, password);
             resultSet = statement.executeQuery();
-            if (resultSet.next()) { //check password
+            if (resultSet.next()) {
                 request.getSession(true); // возвращает JSESSION_ID
                 System.out.println("AuthServlet: SessionId " + request.getRequestedSessionId());
                 usersMap.put(request.getRequestedSessionId(), new User(username, password));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException | NullPointerException e) {
+            request.getSession().setAttribute("errorMessage", "Server not available");
+        } /*catch (SQLException e){
+            connect();
+        }*/
         RequestDispatcher dispatcher = request.getRequestDispatcher("/ans");
         dispatcher.forward(request, response);
     }
 
-    private void clearMapBySessionId(String requestedSessionId) {
+    private void removeOldData(String requestedSessionId, HttpServletRequest request) {
         usersMap.remove(requestedSessionId);
+        if (request.getSession().getAttribute("errorMessage") != null) {
+            request.getSession().removeAttribute("errorMessage");
+        }
     }
+
+    /*private void connect(){
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:postgresql://localhost:55555/postgres", "postgres", "postgres");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }*/
 }

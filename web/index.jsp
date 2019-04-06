@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html>
@@ -31,14 +31,11 @@
         <td width="30%">
             <div class="flex-container">
                 <form action="auth" method="post">
-
-
                     <div>
                         <fieldset>
                             <legend>Username</legend>
                             <label>
                                 <input id="username" class="parameter" type="text" name="username">
-
                             </label>
                         </fieldset>
                     </div>
@@ -47,23 +44,26 @@
                             <legend>Password</legend>
                             <label>
                                 <input id="password" class="parameter" type="text" name="password">
-
                             </label>
                         </fieldset>
                     </div>
-
+                    <div>
+                        <%
+                            String errorMessage = (String) request.getSession().getAttribute("errorMessage");
+                            if (errorMessage != null) {
+                        %>
+                        <%=errorMessage%> <%
+                        }
+                    %>
+                    </div>
                     <div>
                         <input id="magic_button" class="parameter"
                                style="padding: 3%; margin-right: 2%; margin-top: 3%"
-                               type="submit" value="Отправить"
-                               >
-                </div>
+                               type="submit" value="Отправить">
+                    </div>
                 </form>
             </div>
-
         </td>
-
-
     </tr>
 </table>
 

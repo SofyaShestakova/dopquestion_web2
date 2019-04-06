@@ -22,7 +22,10 @@ public class MyFilter extends HttpFilter {
             session.setAttribute("username", users.get(request.getRequestedSessionId()).getUsername());
             chain.doFilter(request, response);
         } else {
-            response.sendRedirect("/index.jsp");
+            if (request.getSession().getAttribute("errorMessage") == null) {
+                request.getSession().setAttribute("errorMessage", "Invalid login or password");
+            }
+            response.sendRedirect("/index.jsp?error");
         }
     }
 
