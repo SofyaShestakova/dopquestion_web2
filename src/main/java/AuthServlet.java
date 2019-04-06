@@ -44,12 +44,12 @@ public class AuthServlet extends HttpServlet {
                     request.getSession(true); // возвращает JSESSION_ID
                     System.out.println("AuthServlet: SessionId " + request.getRequestedSessionId());
                     usersMap.put(request.getRequestedSessionId(), new User(username, password));
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/ans");
-                    dispatcher.forward(request, response);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/ans");
+        dispatcher.forward(request, response);
     }
 }
