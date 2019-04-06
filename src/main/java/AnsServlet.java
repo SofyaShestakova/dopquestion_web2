@@ -1,4 +1,3 @@
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +17,8 @@ public class AnsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
-        out.println("Hello, " + username);
+        if (session != null) {
+            out.println("Hello, " + username);
+        }
     }
 }

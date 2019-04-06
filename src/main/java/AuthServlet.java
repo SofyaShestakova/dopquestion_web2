@@ -19,7 +19,7 @@ public class AuthServlet extends HttpServlet {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost/postgres", "postgres", "postgres");
+                    "jdbc:postgresql://localhost:55555/postgres", "postgres", "postgres");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -42,6 +42,7 @@ public class AuthServlet extends HttpServlet {
                 String dbPassword = resultSet.getString(1);
                 if (dbPassword.equals(password)) {
                     request.getSession(true); // возвращает JSESSION_ID
+                    System.out.println("AuthServlet: SessionId " + request.getRequestedSessionId());
                     usersMap.put(request.getRequestedSessionId(), new User(username, password));
                     RequestDispatcher dispatcher = request.getRequestDispatcher("/ans");
                     dispatcher.forward(request, response);
