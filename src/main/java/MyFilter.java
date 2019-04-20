@@ -15,7 +15,7 @@ public class MyFilter extends HttpFilter {
 
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(true);
         ServletContext context = getServletContext();
         Map<String, User> users = (Map<String, User>) context.getAttribute("usersMap");
         if (users.containsKey(session.getId())) {
@@ -24,8 +24,8 @@ public class MyFilter extends HttpFilter {
         } else {
             if (request.getSession().getAttribute("errorMessage") == null) {
                 request.getSession().setAttribute("errorMessage", "Invalid login or password");
+                response.sendRedirect("/lab2/index.jsp?error");
             }
-            response.sendRedirect("/index.jsp?error");
         }
     }
 

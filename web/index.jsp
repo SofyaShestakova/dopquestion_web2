@@ -33,7 +33,7 @@
                 <form action="auth" method="post">
                     <div>
                         <fieldset>
-                            <legend>Username</legend>
+                            <ld>Username</ld>
                             <label>
                                 <input id="username" class="parameter" type="text" name="username">
                             </label>
@@ -53,7 +53,7 @@
                             if (errorMessage != null) {
                         %>
                         <%=errorMessage%> <%
-                        }
+                        };
                     %>
                     </div>
                     <div>

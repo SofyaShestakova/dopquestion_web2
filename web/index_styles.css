@@ -1,3 +1,7 @@
+body {
+    width: 50%;
+    margin: 0 auto;
+}
 header {
     font-family: sans-serif;
     font-size: 150%;

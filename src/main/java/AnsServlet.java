@@ -17,8 +17,11 @@ public class AnsServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
-        if (session != null) {
+        if (username != null) {
             out.println("Hello, " + username);
+            session.setAttribute("errorMessage","");
+        } else {
+            out.println("Hello, anonymous user!");
         }
     }
 }
